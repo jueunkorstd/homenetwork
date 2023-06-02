@@ -1,0 +1,10 @@
+var alarmId = 0;
+console.log(alarmId);
+alarmId += 1;
+console.log(alarmId);
+alarmId += 1;
+console.log(alarmId); alarmId += 1;
+console.log(alarmId); alarmId += 1;
+console.log(alarmId); alarmId += 1;
+console.log(alarmId); alarmId += 1;
+console.log(alarmId);

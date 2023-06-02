@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Read Page</title>
+  </head>
+  <body>
+    <h1>알람 데이터</h1>
+    <ul>
+      {% for alarm in alarm_data %}
+      <li>
+        아이디: {{ alarm['id'] }}<br />
+        이름: {{ alarm['name'] }}<br />
+        시간: {{ alarm['time'] }}
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

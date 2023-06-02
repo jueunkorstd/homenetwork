@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/css/reset.css" />
+    <link rel="stylesheet" href="../static/css/main.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <script src="../static/js/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>지문 인식 알람 시계</title>
+  </head>
+
+  <!-- 배경을 검게 설정 -->
+  <body class="bg-dark">
+    <!-- 모든 요소를 담은 컨테이너 -->
+    <div class="container">
+      <!-- 현재 시각과 추가 버튼을 담은 타임 뷰 div -->
+      <div class="time-view card bg-dark">
+        <!-- 현재 시각을 담은 카드 -->
+        <div class="card-body">
+          <div class="showtime">
+            <!-- 현재 날짜를 불러옴 -->
+            <div
+              id="nowdate"
+              class="date text-light h3"
+              style="text-align: center"
+            ></div>
+            <!-- 현재 시각을 불러옴 -->
+            <div
+              id="nowtime"
+              class="time text-light display-3 font-weight-bold"
+              style="text-align: center"
+            ></div>
+          </div>
+        </div>
+        <!-- 알람 설정 -->
+        <div class="modal-content bg-dark" style="width: 25rem">
+          <h3 class="text-light">알람 설정</h3>
+          <br />
+          <p class="text-light">알람 이름</p>
+          <div class="input-group mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="알람 이름"
+              aria-label="Username"
+              aria-describedby="basic-addon1"
+              id="nameInput"
+            />
+          </div>
+          <p class="text-light">알람 시각</p>
+          <input type="time" id="timeInput" name="time" />
+          <br />
+          <button class="btn btn-light" onclick="addNewItem()">추가</button>
+        </div>
+      </div>
+
+      <!-- 알람 리스트를 담은 리스트 뷰 div -->
+      <div class="list-view card bg-dark">
+        <div
+          class="card-body list-body"
+          style="display: flex; flex-wrap: wrap; justify-content: left"
+          id="container"
+        >
+          {% for alarm in alarm_data %}
+          <!-- 알람 리스트 -->
+          <div
+            class="card bg-dark text-light border border-secondary"
+            style="
+              width: 22rem;
+              display: flex;
+              flex-wrap: wrap;
+              justify-content: center;
+            "
+          >
+            <div class="card-body">
+              <button type="button" class="btn btn-danger btn-sm float-right">
+                삭제
+              </button>
+              <p class="card-text display-4 mt-5" style="text-align: center">
+                {{ alarm.key2 }}
+              </p>
+
+              <p class="card-text h5 ml-3">{{ alarm.key1 }}</p>
+              <p class="card-text h5 ml-3">사운드 : 전파 탐지기</p>
+              <div class="d-flex justify-content-center">
+                <label class="switch mt-3">
+                  <input type="checkbox" />
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <script>
+      function addNewItem() {
+        var container = document.getElementById("container");
+        var nameInput = document.getElementById("nameInput");
+        var timeInput = document.getElementById("timeInput");
+
+        var nameValue = nameInput.value;
+        var timeValue = timeInput.value;
+
+        // 새로운 항목 요소 생성
+        var newItem = document.createElement("div");
+        newItem.className = "card bg-dark text-light border border-secondary";
+        newItem.style.width = "22rem";
+        newItem.style.display = "flex";
+        newItem.style.flexWrap = "wrap";
+        newItem.style.justifyContent = "center";
+        newItem.style.margin = "auto";
+
+        // 항목 바디 요소 생성
+        var itemBody = document.createElement("div");
+        itemBody.className = "card-body";
+
+        // 삭제 버튼 생성
+        var deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.className = "btn btn-danger btn-sm float-right";
+        deleteBtn.innerText = "삭제";
+        deleteBtn.addEventListener("click", function () {
+          container.removeChild(newItem);
+        });
+
+        // 시간 텍스트 생성
+        var timeText = document.createElement("p");
+        timeText.className = "card-text display-4 mt-5";
+        timeText.style.textAlign = "center";
+        timeText.innerText = timeValue;
+
+        // 알람 이름 텍스트 생성
+        var nameText = document.createElement("p");
+        nameText.className = "card-text h5 ml-3";
+        nameText.innerText = nameValue;
+
+        // 사운드 텍스트 생성
+        var soundText = document.createElement("p");
+        soundText.className = "card-text h5 ml-3";
+        soundText.innerText = "사운드: 전파 탐지기";
+
+        // 스위치 생성
+        var switchDiv = document.createElement("div");
+        switchDiv.className = "d-flex justify-content-center";
+
+        var switchLabel = document.createElement("label");
+        switchLabel.className = "switch mt-3";
+
+        var switchInput = document.createElement("input");
+        switchInput.type = "checkbox";
+
+        var sliderSpan = document.createElement("span");
+        sliderSpan.className = "slider round";
+
+        // 요소들을 항목 바디에 추가
+        itemBody.appendChild(deleteBtn);
+        itemBody.appendChild(timeText);
+        itemBody.appendChild(nameText);
+        itemBody.appendChild(soundText);
+        switchLabel.appendChild(switchInput);
+        switchLabel.appendChild(sliderSpan);
+        switchDiv.appendChild(switchLabel);
+        itemBody.appendChild(switchDiv);
+
+        // 항목 바디를 항목에 추가
+        newItem.appendChild(itemBody);
+
+        // 항목을 컨테이너에 추가
+        container.appendChild(newItem);
+
+        var data = {
+          name: nameValue,
+          time: timeValue,
+        };
+
+        $.ajax({
+          url: "/your-endpoint", // 서버의 엔드포인트 URL
+          type: "GET", // GET 요청으로 변경
+          data: {
+            key1: data.name, // 전달할 데이터 (키: 값 형태)
+            key2: data.time,
+            // 추가적인 데이터
+          },
+          success: function (response) {
+            // 서버 응답이 성공적으로 도착했을 때 실행할 콜백 함수
+            console.log(response); // 응답 데이터 출력 또는 처리
+          },
+          error: function (xhr, status, error) {
+            // 서버 응답이 실패했을 때 실행할 콜백 함수
+            console.error(error); // 에러 메시지 출력 또는 처리
+          },
+        });
+      }
+    </script>
+  </body>
+</html>
